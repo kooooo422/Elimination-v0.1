@@ -1,1 +1,29 @@
-# Elimination-v0.1
+# Elimination-v0.1 
+## 切換場景 SceneManager.LoadScene
+https://docs.unity3d.com/ScriptReference/SceneManagement.SceneManager.LoadScene.html
+```c#
+SceneManager.LoadScene(sceneIndex);
+```
+## 影片播完跳轉 
+https://stackoverflow.com/questions/44696030/detect-when-videoplayer-has-finished-playing
+```c#
+using UnityEngine;
+using UnityEngine.Video;
+
+public class filename : MonoBehaviour
+{
+    private VideoPlayer m_VideoPlayer;
+
+    void Awake () 
+    {
+        m_VideoPlayer = GetComponent<VideoPlayer>();
+        m_VideoPlayer.loopPointReached += OnMovieFinished; // loopPointReached is the event for the end of the video
+    }
+
+    void OnMovieFinished(VideoPlayer player)
+    {
+        Debug.Log("Event for movie end called");
+        player.Stop();
+    }
+}
+```
