@@ -27,3 +27,23 @@ public class filename : MonoBehaviour
     }
 }
 ```
+## call sg90 api
+```c#
+    void GetData() => StartCoroutine(GetData_Coroutine());
+ 
+    IEnumerator GetData_Coroutine()
+    {
+        Debug.Log("Loading...");
+        string url = "yourip";
+        using(UnityWebRequest request = UnityWebRequest.Get(url))
+        {
+            yield return request.SendWebRequest();
+            if (request.isNetworkError || request.isHttpError){
+                Debug.Log(request.error);
+            }
+            else{
+                Debug.Log(request.downloadHandler.text);
+            }
+        }
+    }
+```
