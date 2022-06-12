@@ -1,0 +1,51 @@
+from typing import Optional
+
+from fastapi import FastAPI
+from typing import Union
+app = FastAPI() # 建立一個 Fast API application
+from pydantic import BaseModel
+
+class Item(BaseModel):
+    title: str
+import RPi.GPIO as GPIO
+import time
+# 使用 BCM 編號
+GPIO.setmode(GPIO.BCM)
+
+# 操作 GPIO 4（Pin 7）
+pin = 17
+
+# 設定為 GPIO 為輸入模式
+GPIO.setup(pin, GPIO.OUT)
+
+
+@app.get("/") # 指定 api 路徑 (get方法)
+def read_root():
+    return {"Hello": "World"}
+
+
+@app.get("/users/{user_id}") # 指定 api 路徑 (get方法)
+def read_user(user_id: int, q: Optional[str] = None):
+    return {"user_id": user_id, "q": q}
+
+@app.get("/led/{set}")
+async def setLed( set : str ):
+    if(set == "on"):
+        GPIO.output(pin, GPIO.HIGH)
+    if(set == "off"):
+        GPIO.output(pin, GPIO.LOW)
+    return {"Led": set }
+@app.get("/led")
+async def led( ledStatus : str ):
+    if(ledStatus == "on"):
+        GPIO.output(pin, GPIO.HIGH)
+
+    if(ledStatus == "off"):
+        GPIO.output(pin, GPIO.LOW)
+
+    return { "ledStatus" : ledStatus }
+
+@app.post("/items/")
+async def create_item(item: Item):
+    
+	return item
