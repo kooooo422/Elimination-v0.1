@@ -34,3 +34,10 @@ def create_user_item(db: Session, item: schemas.ItemCreate, user_id: int):
     db.commit()
     db.refresh(db_item)
     return db_item
+
+def create_leds(db: Session, Led: schemas.LedCreate):
+    db_Led = models.Leds(Led_id = Led.Led_id , Led_index = Led.Led_index, Led_status = Led.Led_status)
+    db.add(db_Led)
+    db.commit()
+    db.refresh(db_Led)
+    return db_Led

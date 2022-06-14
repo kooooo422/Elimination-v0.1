@@ -35,3 +35,10 @@ class User(UserBase):
 
     class Config:
         orm_mode = True
+
+class LedCreate(BaseModel):
+    Led_id :str
+    Led_index :str
+    Led_status :str
+    class Config:
+        orm_mode = True

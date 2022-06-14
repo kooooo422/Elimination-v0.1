@@ -1,8 +1,7 @@
+from email.mime import base
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
-
 from database import Base
-
 
 class User(Base):
     __tablename__ = "users"
@@ -24,3 +23,10 @@ class Item(Base):
     owner_id = Column(Integer, ForeignKey("users.id"))
 
     owner = relationship("User", back_populates="items")
+
+class Leds(Base):
+    __tablename__ = "led"
+
+    Led_id = Column(String, primary_key=True, index=True)
+    Led_index = Column(String, index=True)
+    Led_status = Column(String, index=True)
