@@ -41,3 +41,6 @@ def create_leds(db: Session, Led: schemas.LedCreate):
     db.commit()
     db.refresh(db_Led)
     return db_Led
+
+def get_leds(db: Session, skip: int = 0, limit: int = 100):
+    return db.query(models.Leds).offset(skip).limit(limit).all()

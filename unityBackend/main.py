@@ -56,6 +56,10 @@ def read_items(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
 def create_leds(led: schemas.LedCreate, db: Session = Depends(get_db)):
     return crud.create_leds(db=db, Led=led)
 
+@app.get("/getleds/", response_model=list[schemas.LedCreate])
+def read_leds(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    leds = crud.get_leds(db, skip=skip, limit=limit)
+    return leds
 class LEDstatus(BaseModel):
     LED_id: str
     LED_index: str
