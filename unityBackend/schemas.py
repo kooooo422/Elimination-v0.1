@@ -37,8 +37,8 @@ class User(UserBase):
         orm_mode = True
 
 class LedCreate(BaseModel):
-    Led_id :str
-    Led_index :str
-    Led_status :str
+    Led_id :Union[str, None] = None
+    Led_index :Union[str, None] = None
+    Led_status :Union[str, None] = None
     class Config:
         orm_mode = True

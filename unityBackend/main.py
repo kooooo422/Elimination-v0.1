@@ -61,7 +61,7 @@ def read_leds(db: Session = Depends(get_db)):
     leds = crud.get_leds(db)
     return leds
     
-@app.post("/ledsupdate/{id}/{status}", response_model=schemas.LedCreate)
+@app.patch("/ledsupdate/{id}/{status}", response_model=schemas.LedCreate)
 def update_leds(id : str ,status : str ,led: schemas.LedCreate, db: Session = Depends(get_db)):
     existing_leds = crud.get_leds(db)
     if existing_leds is None:
