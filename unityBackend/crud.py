@@ -42,5 +42,15 @@ def create_leds(db: Session, Led: schemas.LedCreate):
     db.refresh(db_Led)
     return db_Led
 
-def get_leds(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(models.Leds).offset(skip).limit(limit).all()
+def get_leds(db: Session):
+    return db.query(models.Leds).all()
+
+def update_leds(db: Session , Led: schemas.LedCreate):
+    update_data = Led.dict(exclude_unset=True)
+    update_data = models.Leds(Led_id = Led.Led_id , Led_index = Led.Led_index, Led_status = Led.Led_status)
+    for key, value in update_data.items():
+        setattr(Led.Led_id, Led.Led_status, value)
+    db.add(update_data)
+    db.commit()
+    db.refresh(update_data)
+    return update_data
