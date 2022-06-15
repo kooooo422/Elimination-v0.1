@@ -1,4 +1,5 @@
 from sqlalchemy.orm import Session
+from sqlalchemy import update
 
 import models, schemas
 
@@ -45,12 +46,13 @@ def create_leds(db: Session, Led: schemas.LedCreate):
 def get_leds(db: Session):
     return db.query(models.Leds).all()
 
-def update_leds(db: Session , Led: schemas.LedCreate):
+def update_leds(db: Session , Led_id: int, Led: schemas.LedCreate):
+    update_data = db.query(models.Leds).filter(models.Leds.Led_id == Led_id).first()
     update_data = Led.dict(exclude_unset=True)
-    update_data = models.Leds(Led_id = Led.Led_id , Led_index = Led.Led_index, Led_status = Led.Led_status)
-    for key, value in update_data.items():
-        setattr(Led.Led_id, Led.Led_status, value)
-    db.add(update_data)
-    db.commit()
-    db.refresh(update_data)
+    # for key, value in update_data.items():
+    #     setattr(update_data, key, value)
+    # db.add(update_data)
+    # db.commit()
+    # db.refresh(update_data)
+    print(update_data)
     return update_data

@@ -1,3 +1,4 @@
+from turtle import up
 from fastapi import Depends, FastAPI, HTTPException
 from sqlalchemy.orm import Session
 from pydantic import BaseModel
@@ -61,13 +62,10 @@ def read_leds(db: Session = Depends(get_db)):
     leds = crud.get_leds(db)
     return leds
     
-@app.patch("/ledsupdate/{id}/{status}", response_model=schemas.LedCreate)
-def update_leds(id : str ,status : str ,led: schemas.LedCreate, db: Session = Depends(get_db)):
-    existing_leds = crud.get_leds(db)
-    if existing_leds is None:
-        # Error handling, 404 or whatever
-        print("not existing")
-    pass
+@app.patch("/ledsupdate/{led_id}", response_model=schemas.LedCreate)
+def update_led(led_id: int,led: schemas.LedCreate, db: Session = Depends(get_db)):
+    update_data = crud.update_leds(db=db, Led_id=led_id,Led=led)
+    return update_data
 
 
 
