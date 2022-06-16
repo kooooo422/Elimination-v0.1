@@ -54,8 +54,8 @@ def read_items(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     return items
 
 @app.post("/leds/", response_model=schemas.LedCreate)
-def create_leds(led: schemas.LedCreate, db: Session = Depends(get_db)):
-    return crud.create_leds(db=db, Led=led)
+def createORupdateleds(led: schemas.LedCreate, db: Session = Depends(get_db)):
+    return crud.createORupdateleds(db=db, Led=led)
 
 @app.get("/getleds/", response_model=list[schemas.LedCreate])
 def read_leds(db: Session = Depends(get_db)):

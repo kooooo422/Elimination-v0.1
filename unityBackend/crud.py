@@ -36,7 +36,7 @@ def create_user_item(db: Session, item: schemas.ItemCreate, user_id: int):
     db.refresh(db_item)
     return db_item
 
-def create_leds(db: Session, Led: schemas.LedCreate):
+def createORupdateleds(db: Session, Led: schemas.LedCreate):
     update_data = db.query(models.Leds).filter(models.Leds.Led_id == Led.Led_id).first()
     db_Led = models.Leds(Led_id = Led.Led_id , Led_index = Led.Led_index, Led_status = Led.Led_status)
     if update_data is None:
