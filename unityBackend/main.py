@@ -61,7 +61,13 @@ def create_leds(led: schemas.LedCreate, db: Session = Depends(get_db)):
 def read_leds(db: Session = Depends(get_db)):
     leds = crud.get_leds(db)
     return leds
-    
+
+@app.get("/ledstatus/{led_id}", response_model=schemas.LedCreate)
+def read_ledstatus(led_id: str, db: Session = Depends(get_db)):
+    db_leds = crud.get_ledstatus(db, Led_id=led_id)
+    if db_leds is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    return db_leds
 @app.patch("/ledsupdate/{led_id}", response_model=schemas.LedCreate)
 def update_led(led_id: int,led: schemas.LedCreate, db: Session = Depends(get_db)):
     update_data = crud.update_leds(db=db, Led_id=led_id,Led=led)
@@ -79,7 +85,7 @@ class LEDstatus(BaseModel):
 async def getLEDstatus():
     return {"led":"on","ledIndex":"2"}
 
-@app.post("/ledstatus/")
-async def postLEDstatus( status : LEDstatus):
-    print(status)
-    return status 
+# @app.post("/ledstatus/")
+# async def postLEDstatus( status : LEDstatus):
+#     print(status)
+#     return status 

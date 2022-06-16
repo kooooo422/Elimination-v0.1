@@ -37,14 +37,25 @@ def create_user_item(db: Session, item: schemas.ItemCreate, user_id: int):
     return db_item
 
 def create_leds(db: Session, Led: schemas.LedCreate):
+    update_data = db.query(models.Leds).filter(models.Leds.Led_id == Led.Led_id).first()
     db_Led = models.Leds(Led_id = Led.Led_id , Led_index = Led.Led_index, Led_status = Led.Led_status)
-    db.add(db_Led)
-    db.commit()
-    db.refresh(db_Led)
+    if update_data is None:
+        db.add(db_Led)
+        db.commit()
+        db.refresh(db_Led)
+    else:
+        db.delete(update_data)
+        db.commit()
+        db.add(db_Led)
+        db.commit()
+        db.refresh(db_Led)
     return db_Led
 
 def get_leds(db: Session):
     return db.query(models.Leds).all()
+
+def get_ledstatus(db: Session , Led_id: int):
+    return db.query(models.Leds).filter(models.Leds.Led_id == Led_id).first()
 
 def update_leds(db: Session , Led_id: int, Led: schemas.LedCreate):
     update_data = db.query(models.Leds).filter(models.Leds.Led_id == Led_id).first()
