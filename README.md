@@ -150,7 +150,7 @@ public class backend : MonoBehaviour
 }
 
 ```
-## callapi
+## callapi.cs
 ```c#
 using System.Collections;
 using System.Collections.Generic;
@@ -170,23 +170,24 @@ public class callAPI : MonoBehaviour
     public string Status_Normal;
     public string Status_Warning;
     public string Status_Sad;
-    public string url;
+    public string callSG90url;
+    public string callLedurl;
     public void call_sg90(){
-        StartCoroutine(GetData_Coroutine());
+        StartCoroutine(GetData(callSG90url));
     }
     public void call_leds_normal(){
-        StartCoroutine(sendData(Id, Index, Status_Normal));
+        StartCoroutine(postData(callLedurl,Id, Index, Status_Normal));
     } 
     public void call_leds_warning(){
-        StartCoroutine(sendData(Id, Index, Status_Warning));
+        StartCoroutine(postData(callLedurl,Id, Index, Status_Warning));
     } 
     public void call_leds_sad(){
-        StartCoroutine(sendData(Id, Index, Status_Sad));
+        StartCoroutine(postData(callLedurl,Id, Index, Status_Sad));
     } 
-    IEnumerator GetData_Coroutine()
+    IEnumerator GetData(string URL)
     {
         Debug.Log("Loading...");
-        using(UnityWebRequest request = UnityWebRequest.Get(url))
+        using(UnityWebRequest request = UnityWebRequest.Get(URL))
         {
             yield return request.SendWebRequest();
             if (request.isNetworkError || request.isHttpError){
@@ -197,7 +198,7 @@ public class callAPI : MonoBehaviour
             }
         }
     }
-    IEnumerator sendData(string Led_id, string Led_index, string Led_status)   
+    IEnumerator postData(string URL,string Led_id, string Led_index, string Led_status)   
     {
         var user = new LedsData();
         user.Led_id = Led_id;
@@ -206,7 +207,7 @@ public class callAPI : MonoBehaviour
 
         string json = JsonUtility.ToJson(user);
 
-        var req = new UnityWebRequest("http://192.168.208.12:8000/leds/", "POST");
+        var req = new UnityWebRequest(URL, "POST");
         byte[] jsonToSend = new System.Text.UTF8Encoding().GetBytes(json);
         req.uploadHandler = (UploadHandler)new UploadHandlerRaw(jsonToSend);
         req.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
