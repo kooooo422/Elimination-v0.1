@@ -10,8 +10,8 @@
 uint8_t max_bright = 64;       // LED亮度控制变量，可使用数值为 0 ～ 255， 数值越大则光带亮度越高
 CRGB leds[NUM_LEDS];
 
-const char* ssid = "jander";
-const char* password = "108ac2005";
+const char* ssid = "";
+const char* password = "";
 
 // THE DEFAULT TIMER IS SET TO 10 SECONDS FOR TESTING PURPOSES
 // For a final application, check the API call limits per hour/minute to avoid getting blocked/banned
@@ -26,6 +26,31 @@ String jsonBuffer;
 String LEDstatus;
 String LEDindexSTR;
 int LEDindexINT;
+String LEDstatusSwitch;
+String LEDstatusColorR;
+String LEDstatusColorG;
+String LEDstatusColorB;
+int R;
+int G;
+int B;
+
+String getValue(String data, char separator, int index)
+{
+  int found = 0;
+  int strIndex[] = {0, -1};
+  int maxIndex = data.length()-1;
+
+  for(int i=0; i<=maxIndex && found<=index; i++){
+    if(data.charAt(i)==separator || i==maxIndex){
+        found++;
+        strIndex[0] = strIndex[1]+1;
+        strIndex[1] = (i == maxIndex) ? i+1 : i;
+    }
+  }
+
+  return found>index ? data.substring(strIndex[0], strIndex[1]) : "";
+}
+
 void setup() {
   Serial.begin(115200);
   
@@ -52,7 +77,7 @@ void loop() {
   if ((millis() - lastTime) > timerDelay) {
     // Check WiFi connection status
     if(WiFi.status()== WL_CONNECTED){
-      String serverPath = "http://192.168.208.12:8000/ledstatus/1";
+      String serverPath = "url";
       
       jsonBuffer = httpGETRequest(serverPath.c_str());
       Serial.println(jsonBuffer);
@@ -69,6 +94,13 @@ void loop() {
       Serial.print("Led: ");
       Serial.println(myObject["Led_status"]);
       LEDstatus = (const char*)myObject["Led_status"]; 
+      LEDstatusSwitch = getValue(LEDstatus, ' ', 0);
+      LEDstatusColorR = getValue(LEDstatus, ' ', 1);
+      LEDstatusColorG = getValue(LEDstatus, ' ', 2);
+      LEDstatusColorB = getValue(LEDstatus, ' ', 3);
+      R = LEDstatusColorR.toInt();
+      G = LEDstatusColorG.toInt();
+      B = LEDstatusColorB.toInt();
       LEDindexSTR = (const char*)myObject["Led_index"];
       LEDindexINT = LEDindexSTR.toInt();
       Serial.print("Led_index: ");
@@ -79,9 +111,9 @@ void loop() {
     }
     lastTime = millis();
   }
-  if(LEDstatus == "on"){
+  if(LEDstatusSwitch == "on"){
     for(int i=0;i<LEDindexINT;i++){
-      leds[i] = CRGB::White;          // 设置光带中第一个灯珠颜色为红色，leds[0]为第一个灯珠，leds[1]为第二个灯珠
+      leds[i] = CRGB(R,G,B);          // 设置光带中第一个灯珠颜色为红色，leds[0]为第一个灯珠，leds[1]为第二个灯珠
       FastLED.show();                // 更新LED色彩
     }
     FastLED.clear(true);
