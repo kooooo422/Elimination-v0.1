@@ -146,7 +146,85 @@ public class backend : MonoBehaviour
             Debug.Log("Received: " + req.downloadHandler.text);
         }
 
+    }   
 }
+
+```
+## callapi
+```c#
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Networking;
+public class LedsData 
+{
+    public string Led_id;
+    public string Led_index;
+    public string Led_status;
+}
+public class callAPI : MonoBehaviour
+{
+    // Start is called before the first frame update
+    public string Id;
+    public string Index;
+    public string Status_Normal;
+    public string Status_Warning;
+    public string Status_Sad;
+    public string url;
+    public void call_sg90(){
+        StartCoroutine(GetData_Coroutine());
+    }
+    public void call_leds_normal(){
+        StartCoroutine(sendData(Id, Index, Status_Normal));
+    } 
+    public void call_leds_warning(){
+        StartCoroutine(sendData(Id, Index, Status_Warning));
+    } 
+    public void call_leds_sad(){
+        StartCoroutine(sendData(Id, Index, Status_Sad));
+    } 
+    IEnumerator GetData_Coroutine()
+    {
+        Debug.Log("Loading...");
+        using(UnityWebRequest request = UnityWebRequest.Get(url))
+        {
+            yield return request.SendWebRequest();
+            if (request.isNetworkError || request.isHttpError){
+                Debug.Log(request.error);
+            }
+            else{
+                Debug.Log(request.downloadHandler.text);
+            }
+        }
+    }
+    IEnumerator sendData(string Led_id, string Led_index, string Led_status)   
+    {
+        var user = new LedsData();
+        user.Led_id = Led_id;
+        user.Led_index = Led_index;
+        user.Led_status = Led_status;
+
+        string json = JsonUtility.ToJson(user);
+
+        var req = new UnityWebRequest("http://192.168.208.12:8000/leds/", "POST");
+        byte[] jsonToSend = new System.Text.UTF8Encoding().GetBytes(json);
+        req.uploadHandler = (UploadHandler)new UploadHandlerRaw(jsonToSend);
+        req.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
+        req.SetRequestHeader("Content-Type", "application/json");
+
+        //Send the request then wait here until it returns
+        yield return req.SendWebRequest();
+
+        if (req.isNetworkError)
+        {
+            Debug.Log("Error While Sending: " + req.error);
+        }
+        else
+        {
+            Debug.Log("Received: " + req.downloadHandler.text);
+        }
+
+    }
 }
 
 ```
@@ -155,6 +233,7 @@ source code https://github.com/snozbot/fungus/releases/tag/v.3.13.8 <br>
 教學連結 https://forum.gamer.com.tw/C.php?bsn=60602&snA=514
 # esp8266
 ## Split String into String array
+https://stackoverflow.com/questions/9072320/split-string-into-string-array
 ```ino
 String getValue(String data, char separator, int index)
 {
