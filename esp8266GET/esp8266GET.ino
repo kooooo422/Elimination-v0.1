@@ -10,8 +10,8 @@
 uint8_t max_bright = 64;       // LED亮度控制变量，可使用数值为 0 ～ 255， 数值越大则光带亮度越高
 CRGB leds[NUM_LEDS];
 
-const char* ssid = "jander";
-const char* password = "108ac2005";
+const char* ssid = "";
+const char* password = "";
 
 // THE DEFAULT TIMER IS SET TO 10 SECONDS FOR TESTING PURPOSES
 // For a final application, check the API call limits per hour/minute to avoid getting blocked/banned
