@@ -98,6 +98,58 @@ public class backend : MonoBehaviour
 }
 
 ```
+## backend.cs
+```c#
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Networking;
+public class UserData 
+{
+    public string Led_id;
+    public string Led_index;
+    public string Led_status;
+}
+public class backend : MonoBehaviour
+{
+    public string Id;
+    public string Index;
+    public string Status;
+    void Start()
+    {
+        StartCoroutine(sendData(Id, Index, Status));
+    }
+    public IEnumerator sendData(string Led_id, string Led_index, string Led_status)   
+    {
+        var user = new UserData();
+        user.Led_id = Led_id;
+        user.Led_index = Led_index;
+        user.Led_status = Led_status;
+
+        string json = JsonUtility.ToJson(user);
+
+        var req = new UnityWebRequest("apiURL", "POST");
+        byte[] jsonToSend = new System.Text.UTF8Encoding().GetBytes(json);
+        req.uploadHandler = (UploadHandler)new UploadHandlerRaw(jsonToSend);
+        req.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
+        req.SetRequestHeader("Content-Type", "application/json");
+
+        //Send the request then wait here until it returns
+        yield return req.SendWebRequest();
+
+        if (req.isNetworkError)
+        {
+            Debug.Log("Error While Sending: " + req.error);
+        }
+        else
+        {
+            Debug.Log("Received: " + req.downloadHandler.text);
+        }
+
+}
+}
+
+```
 ## fungus
 source code https://github.com/snozbot/fungus/releases/tag/v.3.13.8 <br>
 教學連結 https://forum.gamer.com.tw/C.php?bsn=60602&snA=514
