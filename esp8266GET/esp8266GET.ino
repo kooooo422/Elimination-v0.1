@@ -10,8 +10,8 @@
 uint8_t max_bright = 64;       // LED亮度控制变量，可使用数值为 0 ～ 255， 数值越大则光带亮度越高
 CRGB leds[NUM_LEDS];
 
-const char* ssid = "Konny's";
-const char* password = "108ac1012";
+const char* ssid = "jander";
+const char* password = "108ac2005";
 
 // THE DEFAULT TIMER IS SET TO 10 SECONDS FOR TESTING PURPOSES
 // For a final application, check the API call limits per hour/minute to avoid getting blocked/banned
@@ -52,7 +52,7 @@ void loop() {
   if ((millis() - lastTime) > timerDelay) {
     // Check WiFi connection status
     if(WiFi.status()== WL_CONNECTED){
-      String serverPath = "http://192.168.0.49:8000/";
+      String serverPath = "http://192.168.208.12:8000/ledstatus/1";
       
       jsonBuffer = httpGETRequest(serverPath.c_str());
       Serial.println(jsonBuffer);
@@ -67,11 +67,11 @@ void loop() {
       Serial.print("JSON object = ");
       Serial.println(myObject);
       Serial.print("Led: ");
-      Serial.println(myObject["led"]);
-      LEDstatus = (const char*)myObject["led"]; 
-      LEDindexSTR = (const char*)myObject["ledIndex"];
+      Serial.println(myObject["Led_status"]);
+      LEDstatus = (const char*)myObject["Led_status"]; 
+      LEDindexSTR = (const char*)myObject["Led_index"];
       LEDindexINT = LEDindexSTR.toInt();
-      Serial.print("LedIndex: ");
+      Serial.print("Led_index: ");
       Serial.println(LEDindexINT);
     }
     else {
